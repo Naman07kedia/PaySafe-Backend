@@ -76,3 +76,16 @@ urllib3==2.6.3
 uvicorn==0.40.0
 watchdog==6.0.0
 xgboost==3.2.0
+fastapi
+uvicorn
+sqlalchemy
+python-jose
+passlib
+bcrypt
+pandas
+numpy==1.26.4
+scikit-learn
+xgboost
+joblib
+shap==0.44.1
+python-multipart
