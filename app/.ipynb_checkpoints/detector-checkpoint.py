@@ -167,35 +167,35 @@ def detect_fraud(data: dict):
     else:
         label = "HIGH RISK"
 
-    # ---------------- SHAP ---------------- #
-top_features = []
+     # ---------------- SHAP ---------------- #
+    top_features = []
 
-if explainer:
-    try:
-        shap_values = explainer.shap_values(X)
+    if explainer:
+        try:
+            shap_values = explainer.shap_values(X)
 
-        shap_df = pd.DataFrame({
-            "feature": X.columns,
-            "impact": shap_values[0]
-        })
+            shap_df = pd.DataFrame({
+                "feature": X.columns,
+                "impact": shap_values[0]
+            })
 
-        shap_df["abs"] = shap_df["impact"].abs()
+            shap_df["abs"] = shap_df["impact"].abs()
 
-        top_features_df = shap_df.sort_values(
-            by="abs",
-            ascending=False
-        ).head(5)
+            top_features_df = shap_df.sort_values(
+                by="abs",
+                ascending=False
+            ).head(5)
 
-        top_features = [
-            {
-                "feature": row["feature"],
-                "impact": float(row["impact"])
-            }
-            for _, row in top_features_df.iterrows()
-        ]
+            top_features = [
+                {
+                    "feature": row["feature"],
+                    "impact": float(row["impact"])
+                }
+                for _, row in top_features_df.iterrows()
+            ]
 
-    except Exception as e:
-        print("SHAP ERROR:", e)
+        except Exception as e:
+            print("SHAP ERROR:", e)
 
     # ---------------- HUMAN REASONS ---------------- #
     reasons = []
