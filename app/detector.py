@@ -25,7 +25,10 @@ except:
     anomaly_model = None
 
 # SHAP
-explainer = shap.TreeExplainer(model)
+try:
+    explainer = shap.TreeExplainer(model)
+except:
+    explainer = None
 
 # ---------------- NLP SCAM DETECTION ---------------- #
 scam_patterns = [
@@ -165,26 +168,34 @@ def detect_fraud(data: dict):
         label = "HIGH RISK"
 
     # ---------------- SHAP ---------------- #
-    shap_values = explainer.shap_values(X)
+top_features = []
 
-    shap_df = pd.DataFrame({
-        "feature": X.columns,
-        "impact": shap_values[0]
-    })
+if explainer:
+    try:
+        shap_values = explainer.shap_values(X)
 
-    shap_df["abs"] = shap_df["impact"].abs()
+        shap_df = pd.DataFrame({
+            "feature": X.columns,
+            "impact": shap_values[0]
+        })
 
-    top_features_df = shap_df.sort_values(
-        by="abs", ascending=False
-    ).head(5)
+        shap_df["abs"] = shap_df["impact"].abs()
 
-    top_features = [
-        {
-            "feature": row["feature"],
-            "impact": float(row["impact"])
-        }
-        for _, row in top_features_df.iterrows()
-    ]
+        top_features_df = shap_df.sort_values(
+            by="abs",
+            ascending=False
+        ).head(5)
+
+        top_features = [
+            {
+                "feature": row["feature"],
+                "impact": float(row["impact"])
+            }
+            for _, row in top_features_df.iterrows()
+        ]
+
+    except Exception as e:
+        print("SHAP ERROR:", e)
 
     # ---------------- HUMAN REASONS ---------------- #
     reasons = []
