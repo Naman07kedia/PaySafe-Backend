@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+*.pyc
+
+Data/
+*.csv
+
+.env
+
+# Ignore large files
+*.pkl
+*.joblib
+
+# Allow required ML models
+!ml/model.pkl
+!ml/columns.pkl
+!ml/anomaly.pkl
